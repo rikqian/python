@@ -56,6 +56,9 @@
     ul.nav-tabs.affix{
         top: 30px; /* Set the top position of pinned element */
     }
+/*    embed {
+        padding: 8px 8px 8px 8px;
+    }*/
 </style>
 
 </head>
@@ -80,7 +83,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-3" id="myScrollspy">
+        <div class="col-sm-3" id="myScrollspy">
       <!-- 通过使用 data-spy = "affix" 实现附加导航监听 -->
             <ul class="nav nav-tabs nav-stacked" data-spy="affix" data-offset-top="125"> 
 
@@ -93,13 +96,13 @@
              </ul>
 
         </div>
-        <div class="col-md-9" align="center">
+        <div class="col-sm-9" align="center">
             <!-- Jinjia 模板 循环生成右侧多张图表，使用flask提供的chart列表-->
-          {% for c in chart %}
+          {% for c in chart %}          
           <h3 id={{loop.index0}} align="center">{{title[loop.index0]}}</h3>
           <table align="center">{{table[loop.index0]|safe}}</table>
           <embed type="image/svg+xml" src= {{ c|safe }} />
-          <hr>
+          <hr>     
           {% endfor %}
 <!--           {% for l in line %}
           <embed type="image/svg+xml" src= {{ l|safe }} />

@@ -13,7 +13,7 @@ def getdata(pid):
     # 通过information_schema表获取数据库atm6000db_bs中所有的column及table名称
 
     # 1 未解决BUG按严重程度
-    sql1 = """SELECT CONCAT('严重程度: ',CONVERT(b.severity,char)) AS la, COUNT(b.severity) AS
+    sql1 = """SELECT CONCAT('严重程度：',b.severity) AS la, COUNT(b.severity) AS
      num FROM zt_bug b WHERE b.product = %d AND b.deleted = '0' AND b.STATUS = 'active'
       GROUP BY b.severity""" % pid
 
@@ -72,7 +72,7 @@ def getdataline(pid):
     # 通过information_schema表获取数据库atm6000db_bs中所有的column及table名称
 
     # 4 近期新增bug曲线 日期 - 等级 -数量
-    sqla = """SELECT  DATE(openedDate) as la,CONCAT('严重程度: ',CONVERT(severity,char)) as lb ,COUNT(openedDate) as num FROM zt_bug
+    sqla = """SELECT  DATE(openedDate) as la,CONCAT('严重程度：',severity) as lb ,COUNT(openedDate) as num FROM zt_bug
      WHERE product = %d AND deleted = '0' AND openedDate > DATE_SUB(CURDATE(), INTERVAL 10 DAY)
       GROUP BY DATE(openedDate),severity""" % pid
 
@@ -94,8 +94,8 @@ def getdataline(pid):
 
 
 def getpid():
-    connection = pymysql.connect(host='192.168.51.223', user='test',
-                                 password='123456',
+    connection = pymysql.connect(host='192.168.57.10', user='root',
+                                 password='ajdts',
                                  db='zentao', charset='utf8',
                                  cursorclass=pymysql.cursors.DictCursor)
     sql = "SELECT id,name FROM zt_product WHERE status = 'normal' and code like 'ATM6000%'"

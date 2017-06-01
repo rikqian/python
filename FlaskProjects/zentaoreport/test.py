@@ -29,13 +29,14 @@ def cc():
                 P = p
                 # print(X)
         for item in data.getdata(X):
+            # legend_at_bottom=True
             bar_chart = pygal.Bar(legend_at_bottom=True)
             for i in item:
                 bar_chart.add(str(i['la']), i['num'], rounded_bars=4)
             tabelList.append(bar_chart.render_table(
                 style=True, transpose=False))
             chartList.append(bar_chart.render_data_uri())
-        # 曲线展示
+        # 曲线展示 legend_at_bottom=True
         for testlist in data.getdataline(X):
             line_chart = pygal.Line(legend_at_bottom=True, x_label_rotation=20)
             newlist = []
@@ -63,7 +64,7 @@ def cc():
             lineList.append(line_chart.render_data_uri())
 
     else:
-        # 列表展示
+        # 列表展示 legend_at_bottom=True
         for item in data.getdata(X):
             bar_chart = pygal.Bar(legend_at_bottom=True)
             for i in item:
@@ -73,7 +74,7 @@ def cc():
             chartList.append(bar_chart.render_data_uri())
         # 曲线展示
         for testlist in data.getdataline(X):
-            line_chart = pygal.Line(legend_at_bottom=True, x_label_rotation=20)
+            line_chart = pygal.Line(legend_at_bottom=True)
             newlist = []
             LL = []
             for item in testlist:
@@ -100,7 +101,8 @@ def cc():
             #     style=True, transpose=False))
             lineList.append(line_chart.render_data_uri())
 
-    # return render_template('test.html', chart=chartList, title=titleList, table=tabelList, line=lineList, pid=pl, x=X, p=P)
+    # return render_template('test.html', chart=chartList, title=titleList,
+    # table=tabelList, line=lineList, pid=pl, x=X, p=P)
     return render_template('test.html', chart=chartList + lineList, title=titleList, table=tabelList, pid=pl, x=X, p=P)
 
 if __name__ == '__main__':
