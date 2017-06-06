@@ -1,0 +1,22 @@
+操作步骤：
+1. 配置dbconfig.ini文件
+2. 运行exe (若提示dll缺失，请安装vc_redist.x64.exe)
+3. 等待运行结束，查看REPORT文件
+目前的检查项有：
+环境设备
+1. 环境ACUM网络链接
+2. 环境ACU网络链接
+3. 未配置下位机关键字的环境设备
+4. 配置无效下位机关键字的环境设备
+本体设备
+5. 本体主机网络链接
+6. 本体采集器网络链接
+
+
+备注：
+当前环境设备中，部分的下位机关键字不是kvtable中的点号：
+未检查的设备类型有：
+  AP相关 dev_type = 230/233
+  应力相关 dev_type = 251
+未检查的property_key有：
+  'Alarm_state','RelationCtrlBox','LinkageDevCode','HighLevelAlarm','LowLevelAlarm'
