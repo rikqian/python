@@ -1,5 +1,4 @@
 import pymysql.cursors
-import itertools
 # import datetime
 # import re
 
@@ -29,39 +28,25 @@ def getdata(pid):
       GROUP BY resolution""" % pid
 
     # 已解决按解决者分类
-    sqlreRole = """SELECT u.realname as la, COUNT(b.resolvedBy) AS num
-     FROM zt_bug b LEFT JOIN zt_user u ON b.resolvedBy = u.account
-      WHERE b.product = %d AND b.deleted = '0' AND b.STATUS = 'resolved'
-       GROUP BY b.resolvedBy""" % pid
+    # sqlreRole = """SELECT u.realname as la, COUNT(b.resolvedBy) AS num
+    #  FROM zt_bug b LEFT JOIN zt_user u ON b.resolvedBy = u.account
+    #   WHERE b.product = %d AND b.deleted = '0' AND b.STATUS = 'resolved'
+    #    GROUP BY b.resolvedBy""" % pid
 
     try:
         with connection.cursor() as cursor:
             cursor.execute(sql1)
             sList1 = cursor.fetchall()
-            # result1 = [(row[0], row[1]) for row in cursor.fetchall()]
             cursor.execute(sql2)
             sList2 = cursor.fetchall()
             cursor.execute(sql3)
             sList3 = cursor.fetchall()
-            # cursor.execute(sql1)
-            # sList0 = cursor.fetchall()
-
-            # result2 = ((row[0], row[1]) for row in cursor.fetchall())
-
-            # cursor.execute(sqlreRole)
-            # result3 = ((row[0], row[1]) for row in cursor.fetchall())
 
     finally:
         connection.close()
     L1 = [sList1, sList2, sList3]
 
     return L1
-# for r in cursor.fetchall():
-# 	print(r['num'])
-# print(sList1)
-# print(type(sList1))
-# result1.__next__()
-# print(next(result3))
 
 
 def getdataline(pid):
@@ -110,50 +95,53 @@ def getpid():
     return plist
 
 
-if __name__ == "__main__":
-    # l1,l2,l3 = getdata()
-    # # print(len(l2))
-    # # print(l1,l2,l3)
-    # pat = '.*?－{1}(.*)'
-    # for r in [x['la'] for x in l1]:
-    # 	# print(r)
-    # 	print(re.search(pat,r))
-    # l = getpid()
-    # for item in l:
-    #     print(item['id'], item['name'])
-    testlist = getdataline(49)[0]
-    newlist = []
-    LL = []
-    for item in testlist:
-        newlist.append([i for i in item.values()])
-    # for item in newlist:
-    #     print(item)
-    # print(type(newlist[0][0]), type(newlist[0][1]), type(newlist[0][2]))
-    severity = list(set([i['lb'] for i in testlist]))
-    print(severity)
-    # print(type(severity[0]))
-    date = sorted(list(set([i['la'] for i in testlist])))
-    print(date)
-    # print(type(date[0]))
-    for s in severity:
-        for d in date:
-            t = 0
-            for item in newlist:
-                if (item[1] == s) & (item[0] == d):
-                    t = item[2]
+def formatbyPerson(d):
+    """
+    http://www.pygal.org/en/stable/documentation/types/xy.html
+    可以使用pygal.DDateLine,但是x轴坐标的距离会按照时间比例显示，并不对齐
+    """
+    lalist = sorted(set([x['la'] for x in d]))
+    lblist = sorted(set([x['lb'] for x in d]))
+    datalist = []
+    # ladata = []
+    for item in d:
+        # print(item)
+        datalist.append([item['la'], item['lb'], item['num']])
+    return lalist, lblist, datalist
+
+
+def formatdata(d):
+    """列表d有字典组成，字典结构为：{分类1，分类2，数量}
+    曲线图中，x轴标签为 分类1
+    使用linechart.add("分类2"，数量-列表格式)
+    """
+
+    # 获取所有 分类1：日期 的去重列表
+    lalist = sorted(set([x['la'] for x in d]))
+    # 获取所有 分类2：人员/严重等级 的去重列表
+    lblist = sorted(set([x['lb'] for x in d]))
+    # 曲线图希望按照分类2生成多条曲线，所以以 分类2 为基准，循环遍历列表d。结果是每个 分类2 对应一个列表，包含分类1的数量，不存在的补0
+    ladata = []
+    for lb in lblist:
+        tempdata = []
+        for la in lalist:
+            value = 0
+            for item in d:
+                if (item['la'] == la) & (item['lb'] == lb):
+                    value = item['num']
                     break
-            LL.append(t)
+            tempdata.append(value)
+        ladata.append(tempdata)
+    return lalist, lblist, ladata
 
-    # for item in LL:
-    #     print(item)
-    print(LL[0:28])
-    print(LL[0:8])
 
-    # severity = set([i['lb'] for i in testlist])
-    # date = set([i['la'] for i in testlist])
-    # for s, d in severity, date:
-    #     for it in testlist:
-    #     	if it[s]
-    # grouplist = itertools.groupby(newlist, lambda item: item[1])
-    # for g, v in grouplist:
-    #     print(g, list(v))
+if __name__ == "__main__":
+    # d = getdataline(49)[0]
+    for d in getdataline(49):
+        # date, person, num = formatdata(d)
+        date, person, num = formatbyPerson(d)
+        print(date)
+        print(person)
+        print(num)
+        # for i, e in enumerate(num):
+        #     print(i, e)
