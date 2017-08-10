@@ -6,7 +6,15 @@ def calA(n):
     print(1.958 * (n / 1024 * 5) * 100 / 5)
 
 
+def manualvalue(x, y):
+    print(x * (1 + y))
+    print(x * (1 - y))
+
+
 if __name__ == "__main__":
-    calA(25)
-    calA(27)
-    calA(26)
+    # calA(40)
+    # calA(28)
+    # calA(23)
+    # manualvalue(0.23, 0.2)
+    # manualvalue(0.23, 0.1)
+    manualvalue(18, 0.05)

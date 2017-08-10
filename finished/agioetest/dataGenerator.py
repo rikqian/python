@@ -21,20 +21,17 @@ def gen(n):
     panorama_key)
     VALUES
     ('fakeZM%d', 'fake照明%d', %d, '%s', 'T2', 'T2P2', '(0:0)', '0');"""
-    for i in range(100, 100 + n):
+    for i in range(0, n):
         list.append(sql % (i, i, dev_type, dev_model))
     return list
 
 
-def genSeg():
-    list = []
-    sql = """INSERT INTO atm6000db_v22_base.cable_segment_detail_info (seg_code, cable_core_type,
-     phase_code, start_location, end_location, cable_type_code, hot_parameter_code, lay_condition_code,
-     update_time, current_flag) values
-     (3000100+%d,1,)"""
-
-
-data = gen(151)
+# for item in gen(10):
+#     print(item)
+# print(datetime.datetime.now())
+# print(datetime.datetime.now().isoformat(timespec='seconds'))
+# print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+data = gen(1)
 
 try:
     with connection.cursor() as cursor:
